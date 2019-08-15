@@ -28,6 +28,10 @@ module.exports = (sequelize, DataTypes) => {
     Lecturer.belongsTo(models.Department, {
       foreignKey: 'dept_id'
     })
+    Lecturer.hasMany(models.Attendance, {
+      foreignKey: 'lect_id',
+      onDelete: 'CASCADE'
+    })
   };
   return Lecturer;
 };

@@ -15,6 +15,8 @@ const DeveloperController = require('../controllers/DeveloperController');
 const SchoolController = require('../controllers/SchoolController');
 const FacultyController = require('../controllers/FacultyController');
 const DepartmentController = require('../controllers/DepartmentController');
+const LecturerController = require('../controllers/LecturerController');
+const StudentController = require('../controllers/StudentController');
 
 require('dotenv').config();
 
@@ -88,6 +90,15 @@ router.post('/school/update_level', checkJWT, SchoolController.updateLevel);
 // School delete a level
 router.delete('/school/delete_level/', checkJWT, SchoolController.deleteLevel);
 
+// School create hall
+router.post('/school/create_lecture_hall/', checkJWT, upload.single('hall_pix'), SchoolController.createLectureHall);
+
+// School fetch lecture halls
+router.get('/school/get_lecture_hall/', checkJWT, SchoolController.fetchHalls);
+
+// School fetch Single lecture hall
+router.get('/school/get_single_hall/:id', checkJWT, SchoolController.fetchSingleHall);
+
 
 /**
  |-------------------------
@@ -144,13 +155,62 @@ router.delete('/department/delete_course/', checkJWT, DepartmentController.delet
 // Department create or add new student
 router.post('/department/create_student_acct/', checkJWT, upload.single('picture'), DepartmentController.createStudentAccount);
 
-// Deprtment assign course to lecturer
+// Department update student account
+router.post('/department/update_student_acct/:id', checkJWT, upload.single('picture'), DepartmentController.updateStudentAccount);
+
+// Department fetch all students
+router.get('/department/get_student_acct/:id',checkJWT, DepartmentController.fetchStudentsAccount);
+
+// Department assign course to lecturer
 router.post('/department/assign_course_lecturer/', checkJWT, DepartmentController.assignLecturerToCourse);
+
+// Department update lecturer assigned course
+router.post('/department/update_assigned_course/:id', checkJWT, DepartmentController.updateLecturerAssignedCourse);
 
 // Department fetch lecturer assigned to course, lecturer id is ued here
 router.get('/department/get_lecturer_assigned_course/:id', checkJWT, DepartmentController.fetchLecturerAssignedCourse);
 
 // Department view all lecturer taking a course, course id is used here
 router.get('/department/get_course_lecturer/:id', checkJWT, DepartmentController.fetchLecturerTakingCourse);
+
+
+
+/**
+ |-------------------------
+ | Lecturer Api Routes
+ |-------------------------
+ */
+
+// Lecturer login
+router.post('/lecturer/login/', LecturerController.lecturerLogin);
+
+// Lecturer create lectures
+router.post('/lecturer/create_lectures/', checkJWT, LecturerController.createLectures);
+
+// Lecturer fetch assigned course
+router.get('/lecturer/get_assigned_course/:id', checkJWT, LecturerController.fetchAssignedCourse);
+
+
+
+/**
+ |-------------------------
+ | Student Api Routes
+ |-------------------------
+ */
+
+// Student Login
+router.post('/student/login/', StudentController.studentLogin);
+
+// Student register for courses
+router.post('/student/register_course/', checkJWT, StudentController.registerForCourse);
+
+// Student fetch all courses registered
+router.get('/student/get_course_registered/:id', checkJWT, StudentController.fetchRegisteredCourse);
+
+// Student attend lectures
+router.post('/student/attend_course_lecture/', checkJWT, StudentController.attendLectures);
+
+// Student view lectures created by lecturer
+router.get('/student/get_available_lecture/:id', checkJWT, StudentController.fetchLecturesCreated);
 
 module.exports = router;

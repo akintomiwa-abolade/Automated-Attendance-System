@@ -41,7 +41,7 @@ class DepartmentController{
                                 is_auth: 'hod'
                             }
                             var token = jwt.sign({
-                                school: deptDetails
+                                department: deptDetails
                             }, secret, {
                                 expiresIn: '1d'
                             });
@@ -396,6 +396,83 @@ class DepartmentController{
         }
     }
 
+
+    // Department update student account
+    static async updateStudentAccount(req, res){
+        try{
+            const {firstname, lastname, middlename, gender, dob, email, phone, location, address, religion, picture, dept_id, level_id} = req.body;
+            var base64 = req.file.buffer.toString("base64");
+            var password = bcrypt.hashSync('123456',10);
+
+            let updateStdAcct = {
+                firstname: firstname,
+                lastname: lastname,
+                middlename: middlename,
+                gender: gender,
+                dob: dob,
+                email: email,
+                phone: phone,
+                location: location,
+                address: address,
+                religion: religion,
+                picture: base64,
+                dept_id: dept_id,
+                level_id: level_id
+            }
+            await Student.update(updateStdAcct, {
+                where: {
+                    id: req.params.id
+                }
+            })
+                .then(response=>{
+                    res.status(200).json({success:true, message: "Student account updated successfully."})
+                })
+                .then(err=>res.json({error: err}));
+
+        }catch (e) {
+            res.sendStatus(500);
+        }
+    }
+
+    // Department fetch students account
+    static async fetchStudentsAccount(req, res){
+        try{
+            let id = req.params.id;
+            await Student.findAll({
+                attributes: ['firstname','lastname','matric_no'],
+                where: {dept_id: id}
+            })
+                .then(data=>{
+                    if(data){
+                        res.status(201).json({success: true, studentData: data})
+                    }
+                })
+                .then(err=>{
+                    res.status(500)
+                })
+        }catch (e) {
+            res.sendStatus(500);
+        }
+    }
+
+    // Department fetch student base on level
+    static async fetchStudentInLevel(req, res){
+        try{
+            let id = req.params.id;
+            Student.findAll({
+                where: {leve_id: id}
+            })
+                .then(result=>{
+
+                })
+                .then(err=>{
+                    res.status(500);
+                })
+        }catch (e) {
+            res.sendStatus(500);
+        }
+    }
+
     // Department assign course to lecturer
     static async assignLecturerToCourse(req, res){
         try{
@@ -421,6 +498,27 @@ class DepartmentController{
                 .then(err=>{
                     res.status(500);
                 })
+        }catch (e) {
+            res.sendStatus(500);
+        }
+    }
+
+
+    // Department update lecturer assigned course
+    static async updateLecturerAssignedCourse(req, res){
+        try{
+            const {lect_id, course_id} = req.body;
+            let updateAssignedCourse= {
+                lect_id: lect_id,
+                course_id: course_id
+            }
+            LecturerCourse.update(updateAssignedCourse, {
+                where: {id: req.params.id}
+            })
+                .then(response=>{
+                    res.status(200).json({success:true, message: "Assigned course updated successfully."})
+                })
+                .then(err=>res.json({error: err}));
         }catch (e) {
             res.sendStatus(500);
         }

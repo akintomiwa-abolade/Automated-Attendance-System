@@ -25,6 +25,10 @@ module.exports = (sequelize, DataTypes) => {
     Course.belongsTo(models.Level, {
       foreignKey: 'level_id'
     })
+    Course.hasMany(models.Attendance, {
+      foreignKey: 'course_id',
+      onDelete: 'CASCADE'
+    })
   };
   return Course;
 };

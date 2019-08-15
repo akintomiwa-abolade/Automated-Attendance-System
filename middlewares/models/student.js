@@ -28,12 +28,12 @@ module.exports = (sequelize, DataTypes) => {
     Student.belongsToMany(models.Course,{
       through: 'StudentCourse',
       as: 'courses',
-      foreignKey: 'matric_no'
+      foreignKey: 'student_id'
     })
-    Student.belongsToMany(models.LectureAttendance,{
+    Student.belongsToMany(models.Attendance,{
       through: 'StudentAttendance',
       as: 'attendances',
-      foreignKey: 'matric_no'
+      foreignKey: 'student_id'
     })
   };
   return Student;

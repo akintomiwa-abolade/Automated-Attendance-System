@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     LectureHall.belongsTo(models.School,{
       foreignKey: 'school_id'
     })
-    LectureHall.hasMany(models.LectureAttendance,{
+    LectureHall.hasMany(models.Attendance,{
       foreignKey: 'hall_id',
       onDelete: 'CASCADE'
     })
